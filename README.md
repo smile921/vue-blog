@@ -1,6 +1,6 @@
 # [学习笔记](https://frere921.netlify.com)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/da9e32b0-c72e-4219-9c0a-62aab5c6ae51/deploy-status)](https://app.netlify.com/sites/frere921/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/93b6614c-3d93-43b0-8a59-9c2517157a67/deploy-status)](https://app.netlify.com/sites/frere921/deploys)
 
 ::: danger `git proxy 速切`
 
