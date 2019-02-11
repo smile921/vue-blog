@@ -14,13 +14,13 @@
 
 下图是 32 位机器中 JVM 进程的内存地址分布(4G)
 
-![JVM内存分布](./../img/figure1.gif)
+![JVM内存分布](./img/figure1.gif)
 
 #### 1. Object
 
 没错，Object 是 JVM 中一切内存浪费的根源
 
-![一个Object的内存分配](./../img/figure2.gif)
+![一个Object的内存分配](./img/figure2.gif)
 
 上图是 32 位 JVM 中一个 Integer 对象的内存占用情况，这个对象共占用 128bit 内存，其中只有 32bit 是真正的 int 数据. 其他的部分：
 
@@ -36,7 +36,7 @@
 
 数组比普通的对象多一个 size 字段，如图：
 
-![一个数组对象的内存分配](./../img/figure3.gif)
+![一个数组对象的内存分配](./img/figure3.gif)
 
 int[]数组的存储使用率是 1/5，注意这是 size==1 的情况。如果有更多的数据，int[]数组的内存使用率会提高。
 
@@ -56,7 +56,7 @@ class String {
 
 内存分布如下图：
 
-![一个String对象的内存分配](./../img/figure4.gif)
+![一个String对象的内存分配](./img/figure4.gif)
 
 #### 4. 集合
 

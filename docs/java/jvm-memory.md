@@ -23,7 +23,7 @@ Java 虚拟机（Java Virtual Machine 简称 JVM）是运行所有 Java 程序�
 3. 执行引擎（Execution Engine）：负责执行那些包含在被装载类的方法中的指令。
 4. 运行时数据区（Java Memory Allocation Area）：又叫虚拟机内存或者 Java 内存，虚拟机运行时需要从整个计算机内存划分一块内存区域存储许多东西。例如：字节码、从已装载的 class 文件中得到的其他信息、程序创建的对象、传递给方法的参数，返回值、局部变量等等。
 
-![](./img/19213307_plFg.jpg)
+![](./img/19213307_plFg.png)
 
 ### 2、java 内存分区
 
@@ -57,7 +57,7 @@ JAVA 虚拟机有一条在堆中分配新对象的指令，却没有释放内存
 
 Java 堆是垃圾收集器管理的主要区域，因此又称为“GC 堆”（Garbage Collectioned Heap）。现在的垃圾收集器基本都是采用的分代收集算法，所以 Java 堆还可以细分为：新生代（Young Generation）和老年代（Old Generation），如下图所示。分代收集算法的思想：第一种说法，用较高的频率对年轻的对象(young generation)进行扫描和回收，这种叫做 minor collection，而对老对象(old generation)的检查回收频率要低很多，称为 major collection。这样就不需要每次 GC 都将内存中所有对象都检查一遍，以便让出更多的系统资源供应用系统使用；另一种说法，在分配对象遇到内存不足时，先对新生代进行 GC（Young GC）；当新生代 GC 之后仍无法满足内存空间分配需求时， 才会对整个堆空间以及方法区进行 GC（Full GC）。
 
-![](./img/19213307_nWx7.jpg)
+![](./img/19213307_nWx7.png)
 
 在这里可能会有读者表示疑问：记得还有一个什么**永久代（Permanent Generation）**的啊，难道它不属于 Java 堆？亲，你答对了！其实传说中的永久代就是上面所说的方法区，存放的都是 jvm 初始化时加载器加载的一些类型信息（包括类信息、常量、静态变量等），这些信息的生存周期比较长，GC 不会在主程序运行期对 PermGen Space 进行清理，所以如果你的应用中有很多 CLASS 的话,就很可能出现 PermGen Space 错误。其相关设置参数：
 
@@ -185,7 +185,7 @@ StringBuffer 和 StringBuilder 都继承了抽象类 AbstractStringBuilder，这
 
 A thread can be in only one state at a given point in time. These states are virtual machine states which do not reflect any operating system thread states [NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED].
 
-![jvm memory model ](./img/jvm-memory-model.jpg)
+![jvm memory model ](./img/jvm-memory-model.png)
 
 Java8 Update: PermGen is replaced with Metaspace which is very similar. Main difference is that Metaspace re-sizes dynamically i.e., It can expand at runtime. Java Metaspace space: unbounded (default)
 

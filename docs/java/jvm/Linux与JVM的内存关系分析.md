@@ -4,9 +4,9 @@
 
 在一些物理内存为 8g 的服务器上，主要运行一个 Java 服务，系统内存分配如下：Java 服务的 JVM 堆大小设置为 6g，一个监控进程占用大约 600m，Linux 自身使用大约 800m。从表面上，物理内存应该是足够使用的；但实际运行的情况是，会发生大量使用 SWAP(说明物理内存不够使用 了)，如下图所示。同时，由于 SWAP 和 GC 同时发生会致使 JVM 严重卡顿，所以我们要追问：内存究竟去哪儿了？
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223218_876.jpg '01')](http://www.importnew.com/14486.html/01-3)
+[![ Linux与JVM的内存关系分析](./../img/20150109223218_876.png '01')](http://www.importnew.com/14486.html/01-3)
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223218_984.jpg '02')](http://www.importnew.com/14486.html/02-3)
+[![ Linux与JVM的内存关系分析](./../img/20150109223218_984.png '02')](http://www.importnew.com/14486.html/02-3)
 
 要分析这个问题，理解 JVM 和操作系统之间的内存关系非常重要。接下来主要就 Linux 与 JVM 之间的内存关系进行一些分析。
 
@@ -15,14 +15,14 @@
 JVM 以一个进程（Process）的身份运行在 Linux 系统上，了解 Linux 与进程的内存关系，是理解 JVM 与 Linux 内存的关系的基础。  
 下图给出了硬件、系统、进程三个层面的内存之间的概要关系。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223219_276.jpg '03.png')](http://www.importnew.com/14486.html/03-png)
+[![ Linux与JVM的内存关系分析](./../img/20150109223219_276.png '03.png')](http://www.importnew.com/14486.html/03-png)
 
 从硬件上看，Linux 系统的内存空间由两个部分构成：物理内存和 SWAP（位于磁盘）。物理内存是 Linux 活动时使用的主要内存区域；当物理内 存不够使用时，Linux 会把一部分暂时不用的内存数据放到磁盘上的 SWAP 中去，以便腾出更多的可用内存空间；而当需要使用位于 SWAP 的数据时，必须 先将其换回到内存中。
 
 从 Linux 系统上看，除了引导系统的 BIN 区，整个内存空间主要被分成两个部分：内核内存（Kernel space）、用户内存（User space）。  
 内核内存是 Linux 自身使用的内存空间，主要提供给程序调度、内存分配、连接硬件资源等程序逻辑使用。用户内存是提供给各个进程主要空间，Linux 给 各个进程提供相同的虚拟内存空间；这使得进程之间相互独立，互不干扰。实现的方法是采用虚拟内存技术：给每一个进程一定虚拟内存空间，而只有当虚拟内存实 际被使用时，才分配物理内存。如下图所示，对于 32 的 Linux 系统来说，一般将 0 ～ 3G 的虚拟内存空间分配做为用户空间，将 3 ～ 4G 的虚拟内存空间分配 为内核空间；64 位系统的划分情况是类似的。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223220_721.jpg '04')](http://www.importnew.com/14486.html/04-2)
+[![ Linux与JVM的内存关系分析](./../img/20150109223220_721.png '04')](http://www.importnew.com/14486.html/04-2)
 
 从进程的角度来看，进程能直接访问的用户内存（虚拟内存空间）被划分为 5 个部分：代码区、数据区、堆区、栈区、未使用区。代码区中存放应用程序的机 器代码，运行过程中代码不能被修改，具有只读和固定大小的特点。数据区中存放了应用程序中的全局数据，静态数据和一些常量字符串等，其大小也是固定的。堆 是运行时程序动态申请的空间，属于程序运行时直接申请、释放的内存资源。栈区用来存放函数的传入参数、临时变量，以及返回地址等数据。未使用区是分配新内 存空间的预备区域。
 
@@ -30,7 +30,7 @@ JVM 以一个进程（Process）的身份运行在 Linux 系统上，了解 Linu
 
 JVM 本质就是一个进程，因此其内存模型也有进程的一般特点。但是，JVM 又不是一个普通的进程，其在内存模型上有许多崭新的特点，主要原因有两 个：1.JVM 将许多本来属于操作系统管理范畴的东西，移植到了 JVM 内部，目的在于减少系统调用的次数；2. Java NIO，目的在于减少用于读写 IO 的系统调用的开销。 JVM 进程与普通进程内存模型比较如下图:
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223220_523.jpg '05')](http://www.importnew.com/14486.html/05-2)
+[![ Linux与JVM的内存关系分析](./../img/20150109223220_523.png '05')](http://www.importnew.com/14486.html/05-2)
 
 需要说明的是，这个模型的并不是 JVM 内存使用的精确模型，更侧重于从操作系统的角度而省略了一些 JVM 的内部细节（尽管也很重要）。下面从用户内存和内核内存两个方面讲解 JVM 进程的内存特点。
 
@@ -52,17 +52,17 @@ JVM 的内存管理方式的优点是显而易见的，包括：第一，减少�
 
 应用程序通常不直接和内核内存打交道，内核内存由操作系统进行管理和使用；不过随着 Linux 对性能的关注及改进，一些新的特性使得应用程序可以使 用内核内存，或者是映射到内核空间。Java NIO 正是在这种背景下诞生的，其充分利用了 Linux 系统的新特性，提升了 Java 程序的 IO 性能。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223220_372.jpg '06')](http://www.importnew.com/14486.html/06-2)
+[![ Linux与JVM的内存关系分析](./../img/20150109223220_372.png '06')](http://www.importnew.com/14486.html/06-2)
 
 上图给出了 Java NIO 使用的内核内存在 linux 系统中的分布情况。nio buffer 主要包括：nio 使用各种 channel 时所使用的 ByteBuffer、Java 程序主动使用 ByteBuffer.allocateDirector 申请分配的 Buffer。而在 PageCache 里面，nio 使用的内存主要包 括：FileChannel.map 方式打开文件占用 mapped、FileChannel.transferTo 和 FileChannel.transferFrom 所需要的 Cache（图中标示 nio file）。
 
 通过 JMX 可以监控到 NIO Buffer 和 mapped 的使用情况，如下图所示。不过，FileChannel 的实现是通过系统调用使用原生的 PageCache，过程对于 Java 是透明的，无法监控到这部分内存的使用大小。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223221_727.jpg '07')](http://www.importnew.com/14486.html/07-2)
+[![ Linux与JVM的内存关系分析](./../img/20150109223221_727.png '07')](http://www.importnew.com/14486.html/07-2)
 
 Linux 和 Java NIO 在内核内存上开辟空间给程序使用，主要是减少不要的复制，以减少 IO 操作系统调用的开销。例如，将磁盘文件的数据发送网卡，使用普通方法和 NIO 时，数据流动比较下图所示：
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223221_225.jpg '08')](http://www.importnew.com/14486.html/08-2)
+[![ Linux与JVM的内存关系分析](./../img/20150109223221_225.png '08')](http://www.importnew.com/14486.html/08-2)
 
 将数据在内核内存和用户内存之间拷贝是比较消耗资源和时间的事情，而从上图我们可以看到，通过 NIO 的方式减少了 2 次内核内存和用户内存之间的数据拷贝。这是 Java NIO 高性能的重要机制之一（另一个是异步非阻塞）。
 
@@ -86,9 +86,9 @@ JVM 内存 ≈ Java 永久代 ＋ Java 堆(新生代和老年代) ＋ 线程栈�
 
 细心的人会发现，引言中给出两个服务器，一个 SWAP 最多占用了 2.16g，另外一个 SWAP 最多占用了 871m；但是，似乎我们的内存缺口没有那么大。事实上，这是由于 SWAP 和 GC 同时进行造成的，从下图可以看到，SWAP 的使用和长时间的 GC 在同一时刻发生。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223221_472.jpg '09')](http://www.importnew.com/14486.html/09-2)
+<!-- ![ Linux与JVM的内存关系分析](./../img/20150109223221_472.png) -->
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223222_22.jpg '10')](http://www.importnew.com/14486.html/10-7)
+<!-- ![ Linux与JVM的内存关系分析](./../img/20150109223222_22.png) -->
 
 SWAP 和 GC 同时发生会导致 GC 时间很长，JVM 严重卡顿，极端的情况下会导致服务崩溃。原因如下：JVM 进行 GC 时，时需要对相应堆分区的已用 内存进行遍历；假如 GC 的时候，有堆的一部分内容被交换到 SWAP 中，遍历到这部分的时候就需要将其交换回内存，同时由于内存空间不足，就需要把内存中堆 的另外一部分换到 SWAP 中去；于是在遍历堆分区的过程中，(极端情况下)会把整个堆分区轮流往 SWAP 写一遍。Linux 对 SWAP 的回收是滞后的，我 们就会看到大量 SWAP 占用。
 
@@ -103,9 +103,9 @@ SWAP 和 GC 同时发生会导致 GC 时间很长，JVM 严重卡顿，极端的
 (1)在这个场景中， Java 永久代 、Java 堆(新生代和老年代)、线程栈所用内存基本是固定的，因此，占用内存过多的原因就定位在 Java NIO 上。  
 (2)根据前面的模型，Java NIO 使用的内存主要分布在 Linux 内核内存的 System 区和 PageCache 区。查看监控的记录，如下图，我们可以看到发生 SWAP 之前，也就是 物理内存不够使用的时候，PageCache 急剧缩小。因此，可以定位在 System 区的 Java NIO Buffer 发生内存泄漏。
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223222_263.jpg '11')](http://www.importnew.com/14486.html/11-9)
+[![ Linux与JVM的内存关系分析](./../img/7bfc85c0d74ff05806e0b5a0fa0c1df1.png '11')](http://www.importnew.com/14486.html/11-9)
 
-[![ Linux与JVM的内存关系分析](./../img/20150109223223_157.jpg '12')](http://www.importnew.com/14486.html/12-8)
+[![ Linux与JVM的内存关系分析](./../img/c8b2f17833a4c73bb20f88876219ddcd.png '12')](http://www.importnew.com/14486.html/12-8)
 
 (3)由于 NIO 的 DirectByteBuffer 需要在 GC 的后期被回收，因此连续申请 DirectByteBuffer 的程序，通常需要调用 System.gc()，避免长时间不发生 FullGC 导致引用在 old 区的 DirectByteBuffer 内存泄漏。分析到此，可以推断有两种可能的 原因：第一，Java 程序没有在必要的时候调用 System.gc()；第二，System.gc()被禁用。  
 (4)最后是要排查 JVM 启动参数和 Java 程序的 DirectByteBuffer 使用情况。在本例中，查看 JVM 启动参数，发现启用了-XX:+DisableExplicitGC 导致 System.gc()被禁用。
