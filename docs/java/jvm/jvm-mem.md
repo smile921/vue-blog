@@ -1,18 +1,18 @@
-# JVM 内存以及 gc 简介
+# `JVM` 内存以及 `gc` 简介
 
 ## 数据类型
 
 Java 虚拟机中，数据类型可以分为两类：基本类型和引用类型。基本类型的变量保存原始值，即：他代表的值就是数值本身；而引用类型的变量保存引用值。“引用值”代表了某个对象的引用，而不是对象本身，对象本身存放在这个引用值所表示的地址的位置。
 
-#### 基本类型包括：byte,short,int,long,char,float,double,Boolean,returnAddress
+### 基本类型包括：byte,short,int,long,char,float,double,Boolean,returnAddress
 
-#### 引用类型包括：类类型，接口类型和数组。
+### 引用类型包括：类类型，接口类型和数组。
 
 ## 堆与栈
 
 堆和栈是程序运行的关键，很有必要把他们的关系说清楚。
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning001.gif 'JVM Tuning 001')
+![](./../img/o_Jvm_Tuning001.gif 'JVM Tuning 001')
 
 栈是运行时的单位，而堆是存储的单位。
 
@@ -104,19 +104,19 @@ Class NewObject {
 
 标记-清除（Mark-Sweep）:
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning002.png 'JVM Tuning 002')
+![](./../img/o_Jvm_Tuning002.png 'JVM Tuning 002')
 
 此算法执行分两阶段。第一阶段从引用根节点开始标记所有被引用的对象，第二阶段遍历整个堆，把未标记的对象清除。此算法需要暂停整个应用，同时，会产生内存碎片。
 
 复制（Copying）:
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning003.png 'JVM Tuning 003')
+![](./../img/o_Jvm_Tuning003.png 'JVM Tuning 003')
 
 此算法把内存空间划为两个相等的区域，每次只使用其中一个区域。垃圾回收时，遍历当前使用区域，把正在使用中的对象复制到另外一个区域中。次算法每次只处理正在使用中的对象，因此复制成本比较小，同时复制过去以后还能进行相应的内存整理，不会出现“碎片”问题。当然，此算法的缺点也是很明显的，就是需要两倍内存空间。
 
 标记-整理（Mark-Compact）:
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning004.png 'JVM Tuning 004')
+![](./../img/o_Jvm_Tuning004.png 'JVM Tuning 004')
 
 此算法结合了“标记-清除”和“复制”两个算法的优点。也是分两阶段，第一阶段从根节点开始标记所有被引用对象，第二阶段遍历整个堆，把清除未标记对象并且把存活对象“压缩”到堆的其中一块，按顺序排放。此算法避免了“标记-清除”的碎片问题，同时也避免了“复制”算法的空间问题。
 
@@ -138,7 +138,7 @@ Class NewObject {
 
 上面说到的“引用计数”法，通过统计控制生成对象和删除对象时的引用数来判断。垃圾回收程序收集计数为 0 的对象即可。但是这种方法无法解决循环引用。所以，后来实现的垃圾判断算法中，都是从程序运行的根节点出发，遍历整个对象引用，查找存活的对象。那么在这种方式的实现中，垃圾回收从哪儿开始的呢？即，从哪儿开始查找哪些对象是正在被当前系统使用的。上面分析的堆和栈的区别，其中栈是真正进行程序执行地方，所以要获取哪些对象正在被使用，则需要从 Java 栈开始。同时，一个栈是与一个线程对应的，因此，如果有多个线程的话，则必须对这些线程对应的所有的栈进行检查。
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning005.png 'JVM Tuning 005')
+![](./../img/o_Jvm_Tuning005.png 'JVM Tuning 005')
 
 同时，除了栈外，还有系统运行时的寄存器等，也是存储程序运行数据的。这样，以栈或寄存器中的引用为起点，我们可以找到堆中的对象，又从这些对象找到对堆中其他对象的引用，这种引用逐步扩展，最终以 null 引用或者基本类型结束，这样就形成了一颗以 Java 栈中引用所对应的对象为根节点的一颗对象树，如果栈中有多个引用，则最终会形成多颗对象树。在这些对象树上的对象，都是当前系统运行所需要的对象，不能被垃圾回收。而其他剩余对象，则可以视为无法被引用到的对象，可以被当做垃圾进行回收。
 
@@ -164,7 +164,7 @@ Class NewObject {
 
 ## 如何分代
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning006.png 'JVM Tuning 006')
+![](./../img/o_Jvm_Tuning006.png 'JVM Tuning 006')
 
 如图所示：
 
@@ -201,21 +201,21 @@ Full GC
 
 ## 分代垃圾回收流程示意
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning007.png 'JVM Tuning 007')
+![](./../img/o_Jvm_Tuning007.png 'JVM Tuning 007')
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning008.png 'JVM Tuning 008')
+![](./../img/o_Jvm_Tuning008.png 'JVM Tuning 008')
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning009.png 'JVM Tuning 009')
+![](./../img/o_Jvm_Tuning009.png 'JVM Tuning 009')
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning010.png 'JVM Tuning 010')
+![](./../img/o_Jvm_Tuning010.png 'JVM Tuning 010')
 
 ## 选择合适的垃圾收集算法
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning011.png 'JVM Tuning 011')
+![](./../img/o_Jvm_Tuning011.png 'JVM Tuning 011')
 
 用单线程处理所有垃圾回收工作，因为无需多线程交互，所以效率比较高。但是，也无法使用多处理器的优势，所以此收集器适合单处理器机器。当然，此收集器也可以用在小数据量（100M 左右）情况下的多处理器机器上。可以使用-XX:+UseSerialGC 打开。
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning012.png 'JVM Tuning 012')
+![](./../img/o_Jvm_Tuning012.png 'JVM Tuning 012')
 
 对年轻代进行并行垃圾回收，因此可以减少垃圾回收时间。一般在多线程多处理器机器上使用。使用-XX:+UseParallelGC.打开。并行收集器在 J2SE5.0 第六 6 更新上引入，在 Java SE6.0 中进行了增强--可以对年老代进行并行收集。如果年老代不使用并发收集的话，默认是使用单线程进行垃圾回收，因此会制约扩展能力。使用-XX:+UseParallelOldGC 打开。
 
@@ -231,7 +231,7 @@ Full GC
 
 可以保证大部分工作都并发进行（应用不停止），垃圾回收只暂停很少的时间，此收集器适合对响应时间要求比较高的中、大规模应用。使用-XX:+UseConcMarkSweepGC 打开。
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning013.png 'JVM Tuning 013')
+![](./../img/o_Jvm_Tuning013.png 'JVM Tuning 013')
 
 并发收集器主要减少年老代的暂停时间，他在应用不停止的情况下使用独立的垃圾回收线程，跟踪可达对象。在每个年老代垃圾回收周期中，在收集初期并发收集器 会对整个应用进行简短的暂停，在收集中还会再暂停一次。第二次暂停会比第一次稍长，在此过程中多个线程同时进行垃圾回收工作。
 
@@ -269,25 +269,25 @@ Concurrent Mode Failure：并发收集器在应用运行时进行收集，所以
 JVM 中最大堆大小有三方面限制：相关操作系统的数据模型（32-bt 还是 64-bit）限制；系统的可用虚拟内存限制；系统的可用物理内存限制。32 位系统下，一般限制在 1.5G~2G；64 为操作系统对内存无限制。在 Windows Server 2003 系统，3.5G 物理内存，JDK5.0 下测试，最大可设置为 1478m。  
 典型设置：
 
-    java -Xmx3550m -Xms3550m -Xmn2g –Xss128k
+    `java -Xmx3550m -Xms3550m -Xmn2g –Xss128k`
 
-    -Xmx3550m：设置JVM最大可用内存为3550M。
+    `-Xmx3550m：` 设置JVM最大可用内存为3550M。
 
-    -Xms3550m：设置JVM促使内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。
+    `-Xms3550m：` 设置JVM促使内存为3550m。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。
 
-    -Xmn2g：设置年轻代大小为2G。整个堆大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8。
+    `-Xmn2g：` 设置年轻代大小为2G。整个堆大小=年轻代大小 + 年老代大小 + 持久代大小。持久代一般固定大小为64m，所以增大年轻代后，将会减小年老代大小。此值对系统性能影响较大，Sun官方推荐配置为整个堆的3/8。
 
-    -Xss128k：设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。
+    `-Xss128k：` 设置每个线程的堆栈大小。JDK5.0以后每个线程堆栈大小为1M，以前每个线程堆栈大小为256K。更具应用的线程所需内存大小进行调整。在相同物理内存下，减小这个值能生成更多的线程。但是操作系统对一个进程内的线程数还是有限制的，不能无限生成，经验值在3000~5000左右。
 
-    java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0
+    `java -Xmx3550m -Xms3550m -Xss128k -XX:NewRatio=4 -XX:SurvivorRatio=4 -XX:MaxPermSize=16m -XX:MaxTenuringThreshold=0`
 
-    -XX:NewRatio=4:设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5
+    `-XX:NewRatio=4:` 设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1：4，年轻代占整个堆栈的1/5
 
-    -XX:SurvivorRatio=4：设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6
+    `-XX:SurvivorRatio=4：` 设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6
 
-    -XX:MaxPermSize=16m:设置持久代大小为16m。
+    `-XX:MaxPermSize=16m:` 设置持久代大小为16m。
 
-    -XX:MaxTenuringThreshold=0：设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。
+    `-XX:MaxTenuringThreshold=0：` 设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在Survivor区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。
 
 ## 回收器选择
 
@@ -299,23 +299,23 @@ JVM 给了三种选择：串行收集器、并行收集器、并发收集器，�
 
 #### 典型配置：
 
-    java -Xmx3800m -Xms3800m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20
+    `java -Xmx3800m -Xms3800m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20`
 
-    -XX:+UseParallelGC：选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。
+    `-XX:+UseParallelGC：` 选择垃圾收集器为并行收集器。此配置仅对年轻代有效。即上述配置下，年轻代使用并发收集，而年老代仍旧使用串行收集。
 
-    -XX:ParallelGCThreads=20：配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。
+    `-XX:ParallelGCThreads=20：` 配置并行收集器的线程数，即：同时多少个线程一起进行垃圾回收。此值最好配置与处理器数目相等。
 
-    java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 -XX:+UseParallelOldGC
+    `java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC -XX:ParallelGCThreads=20 -XX:+UseParallelOldGC`
 
-    -XX:+UseParallelOldGC：配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。
+    `-XX:+UseParallelOldGC：` 配置年老代垃圾收集方式为并行收集。JDK6.0支持对年老代并行收集。
 
-    java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100
+    `java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100`
 
-    -XX:MaxGCPauseMillis=100:设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。
+    `-XX:MaxGCPauseMillis=100:` 设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值。
 
-    n java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 -XX:+UseAdaptiveSizePolicy
+    `n java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseParallelGC  -XX:MaxGCPauseMillis=100 -XX:+UseAdaptiveSizePolicy`
 
-    -XX:+UseAdaptiveSizePolicy：设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。
+    `-XX:+UseAdaptiveSizePolicy：` 设置此选项后，并行收集器会自动选择年轻代区大小和相应的Survivor区比例，以达到目标系统规定的最低相应时间或者收集频率等，此值建议使用并行收集器时，一直打开。
 
 响应时间优先的并发收集器
 
@@ -323,34 +323,34 @@ JVM 给了三种选择：串行收集器、并行收集器、并发收集器，�
 
 #### 典型配置：
 
-    java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC
+    `java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:ParallelGCThreads=20 -XX:+UseConcMarkSweepGC -XX:+UseParNewGC`
 
-    -XX:+UseConcMarkSweepGC：设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。
+    `-XX:+UseConcMarkSweepGC：` 设置年老代为并发收集。测试中配置这个以后，-XX:NewRatio=4的配置失效了，原因不明。所以，此时年轻代大小最好用-Xmn设置。
 
-    -XX:+UseParNewGC: 设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。
+    `-XX:+UseParNewGC:`  设置年轻代为并行收集。可与CMS收集同时使用。JDK5.0以上，JVM会根据系统配置自行设置，所以无需再设置此值。
 
-    java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC -XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection
+    `java -Xmx3550m -Xms3550m -Xmn2g -Xss128k -XX:+UseConcMarkSweepGC -XX:CMSFullGCsBeforeCompaction=5 -XX:+UseCMSCompactAtFullCollection`
 
-    -XX:CMSFullGCsBeforeCompaction：由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。
+    `-XX:CMSFullGCsBeforeCompaction：` 由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间以后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。
 
-    -XX:+UseCMSCompactAtFullCollection：打开对年老代的压缩。可能会影响性能，但是可以消除碎片
+    `-XX:+UseCMSCompactAtFullCollection：` 打开对年老代的压缩。可能会影响性能，但是可以消除碎片
 
 ## 辅助信息
 
 JVM 提供了大量命令行参数，打印信息，供调试使用。主要有以下一些：
 
--XX:+PrintGC：输出形式：\[GC 118250K->113543K(130112K), 0.0094143 secs\] \[Full GC 121376K->10414K(130112K), 0.0650971 secs\]
+`-XX:+PrintGC：输出形式：\[GC 118250K->113543K(130112K), 0.0094143 secs\] \[Full GC 121376K->10414K(130112K), 0.0650971 secs\]`
 
--XX:+PrintGCDetails：输出形式：\[GC \[DefNew: 8614K->781K(9088K), 0.0123035 secs\] 118250K->113543K(130112K), 0.0124633 secs\] \[GC \[DefNew: 8614K->8614K(9088K), 0.0000665 secs\]\[Tenured: 112761K->10414K(121024K), 0.0433488 secs\] 121376K->10414K(130112K), 0.0436268 secs\]
+`-XX:+PrintGCDetails：输出形式：\[GC \[DefNew: 8614K->781K(9088K), 0.0123035 secs\] 118250K->113543K(130112K), 0.0124633 secs\] \[GC \[DefNew: 8614K->8614K(9088K), 0.0000665 secs\]\[Tenured: 112761K->10414K(121024K), 0.0433488 secs\] 121376K->10414K(130112K), 0.0436268 secs\]`
 
--XX:+PrintGCTimeStamps -XX:+PrintGC：PrintGCTimeStamps 可与上面两个混合使用  
-输出形式：11.851: \[GC 98328K->93620K(130112K), 0.0082960 secs\]
+`-XX:+PrintGCTimeStamps -XX:+PrintGC：PrintGCTimeStamps 可与上面两个混合使用`
+输出形式：`11.851: \[GC 98328K->93620K(130112K), 0.0082960 secs\]`
 
--XX:+PrintGCApplicationConcurrentTime：打印每次垃圾回收前，程序未中断的执行时间。可与上面混合使用。输出形式：Application time: 0.5291524 seconds
+`-XX:+PrintGCApplicationConcurrentTime：打印每次垃圾回收前，程序未中断的执行时间。可与上面混合使用。输出形式：Application time: 0.5291524 seconds`
 
--XX:+PrintGCApplicationStoppedTime：打印垃圾回收期间程序暂停的时间。可与上面混合使用。输出形式：Total time for which application threads were stopped: 0.0468229 seconds
+`-XX:+PrintGCApplicationStoppedTime：打印垃圾回收期间程序暂停的时间。可与上面混合使用。输出形式：Total time for which application threads were stopped: 0.0468229 seconds`
 
--XX:PrintHeapAtGC: 打印 GC 前后的详细堆栈信息。输出形式：
+`-XX:PrintHeapAtGC: 打印 GC 前后的详细堆栈信息。输出形式：`
 
 ```shell
 34.702: \[GC {Heap before gc invocations=7:
@@ -473,7 +473,7 @@ rw space 12288K, 46% used \[0x2b3d0000, 0x2b972060, 0x2b972200, 0x2bfd0000)
 
 算法详解
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning014.png 'JVM Tuning 014')
+![](./../img/o_Jvm_Tuning014.png 'JVM Tuning 014')
 
 G1 可谓博采众家之长，力求到达一种完美。他吸取了增量收集优点，把整个堆划分为一个一个等大小的区域（region）。内存的回收和划分都以 region 为单位；同时，他也吸取了 CMS 的特点，把这个垃圾回收过程分为几个阶段，分散一个垃圾回收过程；而且，G1 也认同分代垃圾回收的思想，认为不同对象的生命周期不同，可以采取不同收集方式，因此，它也支持分代的垃圾回收。为了达到对回收时间的可预计性，G1 在扫描了 region 以后，对其中的活跃对象的大小进行排序，首先会收集那些活跃对象小的 region，以便快速回收空间（要复制的活跃对象少了），因为活跃对象小，里面可以认为多数都是垃圾，所以这种方式被称为 Garbage First（G1）的垃圾回收算法，即：垃圾优先的回收。
 
@@ -529,17 +529,17 @@ G1 对于每个 region 都保存了两个标识用的 bitmap，一个为 previou
 
 堆信息查看
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning015.png 'JVM Tuning 015')
+![](./../img/o_Jvm_Tuning015.png 'JVM Tuning 015')
 
     可查看堆空间大小分配（年轻代、年老代、持久代分配）
     提供即时的垃圾回收功能
     垃圾监控（长时间监控回收情况）
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning016.png 'JVM Tuning 016')
+![](./../img/o_Jvm_Tuning016.png 'JVM Tuning 016')
 
     查看堆内类、对象信息查看：数量、类型等
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning017.png 'JVM Tuning 017')
+![](./../img/o_Jvm_Tuning017.png 'JVM Tuning 017')
 
     对象引用情况查看
 
@@ -551,19 +551,19 @@ G1 对于每个 region 都保存了两个标识用的 bitmap，一个为 previou
 
 ## 线程监控
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning018.png 'JVM Tuning 018')
+![](./../img/o_Jvm_Tuning018.png 'JVM Tuning 018')
 
     线程信息监控：系统线程数量。
     线程状态监控：各个线程都处在什么样的状态下
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning019.png 'JVM Tuning 019')
+![](./../img/o_Jvm_Tuning019.png 'JVM Tuning 019')
 
     Dump线程详细信息：查看线程内部运行情况
     死锁检查
 
 热点分析
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning020.png 'JVM Tuning 020')
+![](./../img/o_Jvm_Tuning020.png 'JVM Tuning 020')
 
 #### CPU 热点：检查系统哪些方法占用的大量 CPU 时间
 
@@ -592,7 +592,7 @@ G1 对于每个 region 都保存了两个标识用的 bitmap，一个为 previou
 
 #### 说明：
 
-![](https://images.cnblogs.com/cnblogs_com/andy-zhou/806435/o_Jvm_Tuning021.png 'JVM Tuning 021')
+![](./../img/o_Jvm_Tuning021.png 'JVM Tuning 021')
 
 这是最典型的内存泄漏方式，简单说就是所有堆空间都被无法回收的垃圾对象占满，虚拟机无法再在分配新空间。  
 如上图所示，这是非常典型的内存泄漏的垃圾回收情况图。所有峰值部分都是一次垃圾回收点，所有谷底部分表示是一次垃圾回收后剩余的内存。连接所有谷底的点，可以发现一条由底到高的线，这说明，随时间的推移，系统的堆空间被不断占满，最终会占满整个堆空间。因此可以初步认为系统内部可能有内存泄漏。（上面的图仅供示例，在实际情况下收集数据的时间需要更长，比如几个小时或者几天）

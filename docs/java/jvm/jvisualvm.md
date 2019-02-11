@@ -1,4 +1,4 @@
-## jvisualvm jvm 监控
+# jvisualvm jvm 监控
 
 为了监控服务器和服务器中 JAVA 进程，我们需要开启 JMX，可以在 JAVA 进程启动的时候，添加如下几个参数：
 
