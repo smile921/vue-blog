@@ -1,3 +1,5 @@
+# AdoptOpenJDK/jitwatch
+
 # [AdoptOpenJDK/jitwatch](https://github.com/AdoptOpenJDK/jitwatch) 一个 JAVA JIT 代码分析与优化工具
 
 JITWATCH 是一个能理解分析 JAVA Hotsopt Just-In-Time 及时编译代码的程序。
@@ -322,7 +324,7 @@ The following is a complete list of the command-line options accepted by
 - Profiler allocates 8kB perf*event buffer for each thread of the target process.
   Make sure `/proc/sys/kernel/perf_event_mlock_kb` value is large enough
   (more than `8 * threads`) when running under unprivileged user.
-  Otherwise the message *"perf*event mmap failed: Operation not permitted"*
+  Otherwise the message *"perf*event mmap failed: Operation not permitted"\*
   will be printed, and no native stack traces will be collected.
 
 - There is no bullet-proof guarantee that the `perf_events` overflow signal
