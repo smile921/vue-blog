@@ -1,4 +1,4 @@
-# 学习笔记
+# [学习笔记](https://frere921.netlify.com)
 
 ::: danger `git proxy 速切`
 

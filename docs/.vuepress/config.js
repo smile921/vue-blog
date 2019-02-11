@@ -4,7 +4,7 @@ module.exports = {
   title: '一个小白工程师的个人成长笔记',
   description:
     'If you think that the life of a developer is a bed of roses you’d better read on.',
-  base: '/vue-blog/',
+  base: '/',
   head: [
     [
       'link',
