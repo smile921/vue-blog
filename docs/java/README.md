@@ -1,27 +1,27 @@
-# A Collection of Blogs
+# 获取源码和 Java doc
 
-::: tip
-This is a tip
+::: tip 获取源码
+
+- Maven 姿势
+
+  - `mvn dependency:sources`
+  - `mvn dependency:resolve -Dclassifier=javadoc`
+  - `mvn dependency:sources -DincludeArtifactIds=guava`
+
+- Gradle 姿势
+  - `gradle cleanEclipse eclipse`
+  - `gradle cleanIdea idea`
+
 :::
 
-::: warning
-This is a warning
-:::
+::: warning 常用链接
 
-::: danger
-This is a dangerous warning
-:::
+- [https://search.maven.org](https://search.maven.org)
+- [https://bintray.com/bintray/jcenter](https://bintray.com/bintray/jcenter)
+  :::
 
-::: danger STOP
-Danger zone, do not proceed
-:::
+::: danger JDK 下载
 
-```js{4}
-export default {
-  data() {
-    return {
-      msg: 'Highlighted!'
-    }
-  }
-}
-```
+- [Red Hat provides OpenJDK](https://developers.redhat.com/products/openjdk/download/)
+- [Azul Systems provides Zulu which is a certified build of OpenJDK for Windows / MacOS / Linux.](https://www.azul.com/downloads/zulu/)
+  :::
