@@ -99,3 +99,4 @@
 - [overview of GitHub v4](https://developer.github.com/v4/)
 - [apollographql](https://www.apollographql.com/)
 - [why use graphql good and bad reasons](https://honest.engineering/posts/why-use-graphql-good-and-bad-reasons)
+- [https://prisma.1wire.com/](https://prisma.1wire.com/)
