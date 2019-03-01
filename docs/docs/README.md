@@ -14,8 +14,9 @@ This is a warning
 > 君主的忧患在于没有人响应，所以说：“一只手单独拍打，虽然很急迫却没有声音.
 > :::
 
-::: danger STOP
-Danger zone, do not proceed
+::: danger explainshell
+https://www.explainshell.com 在线解释 shell 命令的网站
+https://pagedraw.io 一个原型设计工具可以生成 jsx 代码
 :::
 
 ```sql{4}
@@ -40,3 +41,11 @@ FLUSH PRIVILEGES;
 #重新载入赋权表
 FLUSH PRIVILEGES;
 ```
+
+::: tip 内容聚合
+
+- https://sciurls.com/
+- https://techurls.com/
+- https://devurls.com/
+- https://catonmat.net/online-text-tools
+  :::
