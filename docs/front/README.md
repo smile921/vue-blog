@@ -99,18 +99,18 @@ npm -g config set PYTHON_MIRROR http://npm.taobao.org/mirrors/python
 或者编辑配置文件
 
 ```bash{1}
-yarn global   config set registry https://registry.npm.taobao.org/
-yarn global   config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
-yarn global   config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs/
-yarn global   config set electron_mirror https://npm.taobao.org/mirrors/electron/
-yarn global   config set disturl https://npm.taobao.org/dist
-yarn global   config set NVM_NODEJS_ORG_MIRROR http://npm.taobao.org/mirrors/node
-yarn global   config set NVM_IOJS_ORG_MIRROR http://npm.taobao.org/mirrors/iojs
-yarn global   config set PHANTOMJS_CDNURL https://npm.taobao.org/dist/phantomjs
-yarn global   config set ELECTRON_MIRROR http://npm.taobao.org/mirrors/electron/
-yarn global   config set SASS_BINARY_SITE http://npm.taobao.org/mirrors/node-sass
-yarn global   config set SQLITE3_BINARY_SITE http://npm.taobao.org/mirrors/sqlite3
-yarn global   config set PYTHON_MIRROR http://npm.taobao.org/mirrors/python
+yarn  config set registry https://registry.npm.taobao.org/
+yarn  config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
+yarn  config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs/
+yarn  config set electron_mirror https://npm.taobao.org/mirrors/electron/
+yarn  config set disturl https://npm.taobao.org/dist
+yarn  config set NVM_NODEJS_ORG_MIRROR http://npm.taobao.org/mirrors/node
+yarn  config set NVM_IOJS_ORG_MIRROR http://npm.taobao.org/mirrors/iojs
+yarn  config set PHANTOMJS_CDNURL https://npm.taobao.org/dist/phantomjs
+yarn  config set ELECTRON_MIRROR http://npm.taobao.org/mirrors/electron/
+yarn  config set SASS_BINARY_SITE http://npm.taobao.org/mirrors/node-sass
+yarn  config set SQLITE3_BINARY_SITE http://npm.taobao.org/mirrors/sqlite3
+yarn  config set PYTHON_MIRROR http://npm.taobao.org/mirrors/python
 ```
 
 ```js{4}
