@@ -23,6 +23,7 @@ module.exports = {
         buttonText: 'Refresh'
       }
     },
+    sidebar: utils.inferSiderbars(),
     nav: [
       {
         text: '首页',
@@ -50,7 +51,6 @@ module.exports = {
         link: '/other/'
       }
     ],
-    sidebar: utils.inferSiderbars(),
     lastUpdated: '上次更新',
     repo: 'smile921/vue-blog',
     editLinks: true,
