@@ -111,7 +111,7 @@ export default {
 
             var t;
             for(var i=0;i<vars.points.length;++i){
-
+                var x, y, z;
                 x=vars.points[i].x;
                 y=vars.points[i].y;
                 z=vars.points[i].z;
@@ -139,6 +139,7 @@ export default {
                     d = Math.sqrt(x * x + z * z);
                     point = project3D(x, y-d*d/85, z, vars);
                     if (point.d != -1) {
+                      var size;
                         size = 1 + 15000 / (1 + point.d);
                         a = 0.15 - Math.pow(d / 50, 4) * 0.15;
                         if (a > 0) {
@@ -189,6 +190,7 @@ export default {
                 z=vars.points[i].z;
                 point=project3D(x,y,z,vars);
                 if(point.d != -1){
+                  var size, d ;
                     vars.points[i].dist=point.d;
                     size=1+vars.points[i].radius/(1+point.d);
                     d=Math.abs(vars.points[i].y);
@@ -205,7 +207,7 @@ export default {
         function spawnParticle(vars){
 
             var p,ls;
-            pt={};
+            var pt={};
             p=Math.PI*2*Math.random();
             ls=Math.sqrt(Math.random()*vars.distributionRadius);
             pt.x=Math.sin(p)*ls;
@@ -221,8 +223,7 @@ export default {
 
             if(vars === undefined){
                 var vars={};
-                if(!window) return;
-                const document = window.document;
+                
                 vars.canvas = document.querySelector("canvas");
                 vars.ctx = vars.canvas.getContext("2d");
                 vars.canvas.width = document.body.clientWidth;
@@ -277,7 +278,8 @@ html,body{
 
 #canvas{
 	position:absolute;
-	width:100%;
+	width:90%;
+  left: 16px;
 	height:100%;
 }
 </style>
