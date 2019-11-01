@@ -13,7 +13,7 @@
 - 介绍: 软件工程技术面试个人指南。
 - 概览：
 
-  ![interviews](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-12-24/47663247.jpg)
+  ![interviews](./img/47663247.jpg)
 
 ### 2. JCSprout
 
@@ -22,7 +22,7 @@
 - 介绍: Java Core Sprout：处于萌芽阶段的 Java 核心知识库。
 - 概览：
 
-  ![ JCSprout](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-12-24/85903384.jpg)
+  ![ JCSprout](./img/85903384.jpg)
 
 ### 3. JavaGuide
 
@@ -31,7 +31,7 @@
 - 介绍: 【Java 学习+面试指南】 一份涵盖大部分 Java 程序员所需要掌握的核心知识。
 - 概览：
 
-  ![JavaGuide](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-12-24/1352784.jpg)
+  ![JavaGuide](./img/1352784.jpg)
 
 ### 4. technology-talk
 
@@ -46,7 +46,7 @@
 - 介绍: Full Stack Developer Tutorial，后台技术栈/全栈开发/架构师之路，秋招/春招/校招/面试。 from zero to hero。
 - 概览：
 
-  ![fullstack-tutorial](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-12-24/67104534.jpg)
+  ![fullstack-tutorial](./img/67104534.jpg)
 
 ### 6. java-bible
 
@@ -55,7 +55,7 @@
 - 介绍: 这里记录了一些技术摘要，部分文章来自网络，本项目的目的力求分享精品技术干货，以 Java 为主。
 - 概览：
 
-  ![ java-bible](http://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-12-24/90223588.jpg)
+  ![ java-bible](./img/90223588.jpg)
 
 ### 7. EasyJob
 
