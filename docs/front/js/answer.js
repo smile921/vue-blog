@@ -271,3 +271,23 @@ Function.prototype.bind = function(thisArgs) {
 //
 //
 // bind稍微不同，因为它返回的是一个函数，可以在任何你想要执行的时候执行，而前面两个函数都是立马执行的。因此总体来说bind的灵活性会比call和apply更好，适用的场景更多
+
+//
+window.onload = function() {
+  var app = document.getElementById('app')
+  for (var i = 0; i < 100; i++) {
+    var li = document.createElement('li')
+    var content = document.createTextNode(i)
+    li.appendChild(content)
+    apply.appendChild(li)
+  }
+  //  document.write(ul.firstChild);
+  setTimeout(function() {
+    var liNodes = app.getElementsByTagName('li')
+    var newlis = liNodes.reverse()
+    app.removeChild()
+    for (var i = 0; i < newlis.length; i++) {
+      app.appendChild(newlis[i])
+    }
+  }, 5000)
+}

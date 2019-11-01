@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //
+        window.onload = function() {
+            var title = document.getElementById('title')
+            var tt = document.createTextNode('方法一')
+            title.appendChild(tt)
+            methodOne()
+            // setTimeout(function(){
+            //     tt = document.createTextNode('方法二')
+            //     title.innerHTML = ''
+            //     title.appendChild(tt)
+            //     methodTwo()
+            // }, 10 * 1000); 
+            // setTimeout(function(){
+            //     tt = document.createTextNode('方法三')
+            //     title.innerHTML = ''
+            //     title.appendChild(tt)
+            //     methodThree()
+            // }, 10 * 1000);
+        } 
+        function methodThree(){
+            var app = document.getElementById('app')
+            for(var i=0;i<100;i++){
+                var li = document.createElement('li')
+                var content = document.createTextNode(i)
+                li.appendChild(content)
+                app.appendChild(li)
+            }
+            setTimeout(function(){
+                // var list = document.getElementsByTagName('li')
+                var first = app.firstChild
+                var last = app.lastChild
+                var pre = last.previousSibling
+                while(pre != first) {
+                    app.removeChild(pre)
+                    app.appendChild(pre)
+                    pre = last.previousSibling
+                }
+
+            }, 5 * 1000 );
+        } 
+        function methodTwo(){
+            var app = document.getElementById('app')
+            for(var i=0;i<100;i++){
+                var li = document.createElement('li')
+                var content = document.createTextNode(i)
+                li.appendChild(content)
+                app.appendChild(li)
+            }
+            setTimeout(function(){
+                var list = document.getElementsByTagName('li')
+                var lst = Array.from(list)
+                lst.reverse()
+                app.innerHTML=''
+                for(var i=0;i<lst.length;i++){
+                    app.appendChild(lst[i])
+                }
+            },5 * 1000)
+        }
+        // 潜在的坑 里边有空白的 textNode ，需要剔除
+        function methodOne(){
+            var app = document.getElementById('app')
+            for (var i = 0; i < 100; i++) {
+                var li = document.createElement('li')
+                var content = document.createTextNode(i)
+                li.appendChild(content)
+                app.appendChild(li)
+            }
+            //  document.write(ul.firstChild);
+            setTimeout(function() {
+                // var liNodes = app.getElementsByTagName('li')
+                // app.removeChild(liNodes)
+                debugger
+                var heads = []
+                var tails = []
+                // var newlis = liNodes.reverse()
+                for(var i=0; i< 50; i++) {
+                    
+                    var li = app.firstChild
+                    if(li.nodeName === '#text'){
+                        app.removeChild(li)
+                        li = app.firstChild
+                    }
+                    var tli = app.lastChild
+                    if(i===48){
+                    console.log('debugger')
+                    // debugger
+                }
+                    heads.push(li)
+                    tails.push(tli)
+                    app.removeChild(li)
+                    app.removeChild(tli)
+                }
+                for(var i =0;i<50;i++) {
+                    app.appendChild(tails[i])
+                }
+                for(var i=0; i<50;i++) {
+                    app.appendChild(heads[50-i-1])
+                }
+            }, 5000)
+        }  
+    </script>
+    <h2 id="title"></h2>
+    <div class="app">
+        <ul id="app">
+
+        </ul>
+    </div>
+</body>
+</html>
